@@ -15,6 +15,8 @@ namespace PaySpace.Calculator.API.Controllers
     public sealed class CalculatorController(
         ILogger<CalculatorController> logger,
         IHistoryService historyService,
+        IPostalCodeService postalCodeService,
+        ICalculatorSettingsService calculatorSettingsService,
         IMapper mapper)
         : ControllerBase
     {
@@ -24,12 +26,21 @@ namespace PaySpace.Calculator.API.Controllers
             try
             {
 
-                var result = 0; 
+                var result = 0;                
+
+                var calculatorType = await postalCodeService.CalculatorTypeAsync(request.PostalCode);
+
+                if (calculatorType == null)
+                { 
+                    throw new CalculatorException(); 
+                }
+
+                var calculatorSettings = await calculatorSettingsService.GetSettingsAsync(calculatorType.Value);
 
                 await historyService.AddAsync(new CalculatorHistory
                 {
-                    Tax = result.Tax,
-                    Calculator = result.Calculator,
+                    Tax = result,
+                    Calculator = calculatorType.Value,
                     PostalCode = request.PostalCode ?? "Unknown",
                     Income = request.Income
                 });

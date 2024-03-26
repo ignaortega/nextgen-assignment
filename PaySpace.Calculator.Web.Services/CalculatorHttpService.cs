@@ -7,15 +7,20 @@ namespace PaySpace.Calculator.Web.Services
 {
     public class CalculatorHttpService : ICalculatorHttpService
     {
+        protected HttpClient _httpClient;
+        public CalculatorHttpService(HttpClient httpClient) 
+        {
+            this._httpClient= httpClient;
+        }
         public async Task<List<PostalCode>> GetPostalCodesAsync()
         {
-            var response = await httpClient.GetAsync("api/posta1code");
+            var response = await _httpClient.GetAsync("api/posta1code");
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Cannot fetch postal codes, status code: {response.StatusCode}");
             }
 
-            return await response.Content.ReadFromJsonAsync<List<PostalCode>>() ?? [];
+            return await response.Content.ReadFromJsonAsync<List<PostalCode>>() ?? new List<PostalCode>();
         }
 
         public async Task<List<CalculatorHistory>> GetHistoryAsync()

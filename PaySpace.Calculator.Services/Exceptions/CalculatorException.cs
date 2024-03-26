@@ -1,4 +1,4 @@
 ﻿namespace PaySpace.Calculator.Services.Exceptions
 {
-    public sealed class CalculatorException() : InvalidOperationException("Invalid Postal code. Calculator not found");
+    public sealed class CalculatorException(string message = "Invalid Postal code. Calculator not found") : InvalidOperationException(message);
 }
