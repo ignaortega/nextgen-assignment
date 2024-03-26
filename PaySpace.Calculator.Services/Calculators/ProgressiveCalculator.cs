@@ -12,12 +12,6 @@ namespace PaySpace.Calculator.Services.Calculators
 
         protected override decimal CalculateTax(List<CalculatorSetting> calculatorSettings, decimal income)
         {
-            // Assumption:
-            // The provided rate ranges for the progressive tax have a 1 unit gap
-            // Taking into account the expected results in the already defined test
-            // I'm assuming that any value falling into that gap
-            // would be calculated using the rate of the lower end of the gap
-            // In a real life situation, I'd double check with business the desired behavior
             decimal totalTax = 0;
 
             foreach (CalculatorSetting setting in calculatorSettings)
