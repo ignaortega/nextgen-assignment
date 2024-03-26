@@ -26,17 +26,15 @@ namespace PaySpace.Calculator.Services.Calculators
         {
             var calculatorSettings = this._calculatorSettingsService.GetSettingsAsync(this._calculatorType).Result;
 
-            decimal tax = 0;
-
-            if (calculatorSettings.Any() && income > 0)
+            if (calculatorSettings == null || !calculatorSettings.Any())
             {
-                tax = CalculateTax(calculatorSettings, income);
+                throw new CalculatorException($"There are no settings for Calculator {this._calculatorType.ToString()}");
             }
 
             return new CalculateResult()
             {
                 Calculator = this._calculatorType,
-                Tax = tax
+                Tax = income > 0 ? CalculateTax(calculatorSettings, income) : 0
             };
         }
 

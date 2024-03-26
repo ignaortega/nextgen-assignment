@@ -13,6 +13,7 @@ namespace PaySpace.Calculator.Data
 
             modelBuilder.Entity<CalculatorSetting>()
                 .HasData(GetCalculatorSettings());
+            modelBuilder.Entity<CalculatorHistory>();
         }
 
         private static IEnumerable<PostalCode> GetPostalCodes()

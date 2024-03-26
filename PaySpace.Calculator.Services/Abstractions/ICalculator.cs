@@ -1,8 +1,9 @@
-﻿using PaySpace.Calculator.Services.Models;
+﻿using PaySpace.Calculator.Data.Models;
+using PaySpace.Calculator.Services.Models;
 
 namespace PaySpace.Calculator.Services.Abstractions
 {
-    internal interface ICalculator
+    public interface ICalculator
     {
         Task<CalculateResult> CalculateAsync(decimal income);
     }

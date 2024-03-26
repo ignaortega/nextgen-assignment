@@ -15,8 +15,7 @@ namespace PaySpace.Calculator.API.Controllers
     public sealed class CalculatorController(
         ILogger<CalculatorController> logger,
         IHistoryService historyService,
-        IPostalCodeService postalCodeService,
-        ICalculatorSettingsService calculatorSettingsService,
+        ICalculatorFactory calculatorFactory,
         IMapper mapper)
         : ControllerBase
     {
@@ -25,33 +24,34 @@ namespace PaySpace.Calculator.API.Controllers
         {
             try
             {
+                var calculator = await calculatorFactory.GetCalculatorAsync(request.PostalCode);
 
-                var result = 0;                
-
-                var calculatorType = await postalCodeService.CalculatorTypeAsync(request.PostalCode);
-
-                if (calculatorType == null)
-                { 
-                    throw new CalculatorException(); 
-                }
-
-                var calculatorSettings = await calculatorSettingsService.GetSettingsAsync(calculatorType.Value);
+                var calculateResult = await calculator.CalculateAsync(request.Income);
 
                 await historyService.AddAsync(new CalculatorHistory
                 {
-                    Tax = result,
-                    Calculator = calculatorType.Value,
-                    PostalCode = request.PostalCode ?? "Unknown",
+                    Tax = calculateResult.Tax,
+                    Calculator = calculateResult.Calculator,
+                    PostalCode = request.PostalCode,
                     Income = request.Income
                 });
 
-                return this.Ok(mapper.Map<CalculateResultDto>(result));
+                return this.Ok(mapper.Map<CalculateResultDto>(calculateResult));
             }
+            // We could have a single catch for all excptions
+            // and handle the CalculatorExceptions to include the message there
+            // but I rather to have "our" exceptions handling separated
             catch (CalculatorException e)
             {
                 logger.LogError(e, e.Message);
 
                 return this.BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, e.Message);
+
+                return this.BadRequest();
             }
         }
 

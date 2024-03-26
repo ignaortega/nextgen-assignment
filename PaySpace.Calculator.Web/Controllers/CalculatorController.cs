@@ -9,13 +9,16 @@ namespace PaySpace.Calculator.Web.Controllers
 {
     public class CalculatorController(ICalculatorHttpService calculatorHttpService) : Controller
     {
-        public IActionResult Index()
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            var vm = this.GetCalculatorViewModelAsync();
+            var vm = await this.GetCalculatorViewModelAsync();
 
             return this.View(vm);
         }
 
+        [HttpGet]
         public async Task<IActionResult> History()
         {
             return this.View(new CalculatorHistoryViewModel
@@ -57,7 +60,7 @@ namespace PaySpace.Calculator.Web.Controllers
 
             return new CalculatorViewModel
             {
-                PostalCodes = postalCodes,
+                PostalCodes = new SelectList(postalCodes),
                 Income = request.Income,
                 PostalCode = request.PostalCode ?? string.Empty
             };
