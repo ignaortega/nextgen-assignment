@@ -1,6 +1,8 @@
 ﻿using System.Net.Http.Json;
 using System.Text;
 
+using Microsoft.Extensions.Configuration;
+
 using Newtonsoft.Json;
 
 using PaySpace.Calculator.Common.Models;
@@ -11,10 +13,17 @@ namespace PaySpace.Calculator.Web.Services
     public class CalculatorHttpService : ICalculatorHttpService
     {
         protected HttpClient _httpClient;
-        public CalculatorHttpService(HttpClient httpClient) 
+        public CalculatorHttpService(HttpClient httpClient, IConfiguration configuration) 
         {
+            var baseUrl = configuration.GetValue<string>("CalculatorSettings:ApiUrl");
+            
+            if (string.IsNullOrEmpty(baseUrl))
+            {
+                throw new InvalidOperationException("Base URL is not configured.");
+            }
+
             this._httpClient = httpClient;
-            this._httpClient.BaseAddress = new Uri("https://localhost:7119");
+            this._httpClient.BaseAddress = new Uri(baseUrl);
         }
         public async Task<List<PostalCodeDto>> GetPostalCodesAsync()
         {
@@ -54,7 +63,7 @@ namespace PaySpace.Calculator.Web.Services
         public async Task DeleteHistory(long id)
         {
             HttpContent httpContent = new StringContent(string.Empty);
-            var response = await this._httpClient.PostAsync($"api/delete-history?id={id}", null);
+            var response = await this._httpClient.PostAsync("api/delete-history?id={id}", null);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Cannot calculate tax, status code: {response.StatusCode}");

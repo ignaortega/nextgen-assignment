@@ -1,14 +1,22 @@
-using PaySpace.Calculator.Web.Services;
+using System.Configuration;
 
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.Extensions.Configuration;
+
+using PaySpace.Calculator.Web.Services;
 
 IConfiguration config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
-
 var calculatorApiSettings = config.GetSection("CalculatorSettings");
-builder.Services.Configure< CalculatorApiSettings>(calculatorApiSettings);
-builder.Services.AddCalculatorHttpServices(calculatorApiSettings);
+if(string.IsNullOrEmpty(calculatorApiSettings.GetValue<string>("ApiUrl")))
+{
+    throw new ApplicationException("Missing API url");
+}
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<CalculatorApiSettings>(calculatorApiSettings);
+builder.Services.AddCalculatorHttpServices();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
