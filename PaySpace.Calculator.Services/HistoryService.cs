@@ -3,6 +3,7 @@
 using PaySpace.Calculator.Data;
 using PaySpace.Calculator.Data.Models;
 using PaySpace.Calculator.Services.Abstractions;
+using PaySpace.Calculator.Services.Exceptions;
 
 namespace PaySpace.Calculator.Services
 {
@@ -19,6 +20,12 @@ namespace PaySpace.Calculator.Services
         public async Task DeleteHistoryAsync(long id)
         {
             var historyToDelete = await context.Set<CalculatorHistory>().FindAsync(id);
+            
+            if (historyToDelete == null)
+            {
+                throw new CalculatorResourceNotFoundException($"There is no record for calculation history ({id})");
+            }
+
             context.Set<CalculatorHistory>().Remove(historyToDelete);
             await context.SaveChangesAsync();
         }
@@ -34,11 +41,16 @@ namespace PaySpace.Calculator.Services
         public async Task UpdateHistoryAsync(CalculatorHistory calculatorHistory)
         {
             var historyToUpdate = await context.Set<CalculatorHistory>().FindAsync(calculatorHistory.Id);
+
+            if(historyToUpdate == null)
+            {
+                throw new CalculatorResourceNotFoundException($"There is no record for calculation history ({calculatorHistory.Id})");
+            }
+
             historyToUpdate.Income = calculatorHistory.Income;
             historyToUpdate.Calculator = calculatorHistory.Calculator;
             historyToUpdate.PostalCode= calculatorHistory.PostalCode;  
             historyToUpdate.Tax= calculatorHistory.Tax;
-            historyToUpdate.Timestamp = DateTime.Now;
             await context.SaveChangesAsync();
         }
     }

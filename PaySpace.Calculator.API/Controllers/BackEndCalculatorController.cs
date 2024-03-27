@@ -52,14 +52,17 @@ namespace PaySpace.Calculator.API.Controllers
 
                 return this.Ok(mapper.Map<CalculateResultDto>(calculateResult));
             }
-            // We could have a single catch for all excptions
-            // and handle the CalculatorExceptions to include the message there
-            // but I rather to have "our" exceptions handling separated
             catch (CalculatorException e)
             {
                 logger.LogError(e, e.Message);
 
                 return this.BadRequest(e.Message);
+            }
+            catch (CalculatorResourceNotFoundException e)
+            {
+                logger.LogError(e, e.Message);
+
+                return this.NotFound();
             }
             catch (Exception e)
             {
@@ -83,6 +86,12 @@ namespace PaySpace.Calculator.API.Controllers
             try
             {
                 await historyService.DeleteHistoryAsync(id);
+            }
+            catch (CalculatorResourceNotFoundException e)
+            {
+                logger.LogError(e, e.Message);
+
+                return this.NotFound();
             }
             catch (Exception e)
             {

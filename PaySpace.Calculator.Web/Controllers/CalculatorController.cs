@@ -7,11 +7,11 @@ using PaySpace.Calculator.Web.Services.Abstractions;
 
 namespace PaySpace.Calculator.Web.Controllers
 {
-    public class FrontEndCalculatorController : Controller
+    public class CalculatorController : Controller
     {
         private readonly ICalculatorHttpService _calculatorHttpService;
 
-        public FrontEndCalculatorController(ICalculatorHttpService calculatorHttpService)
+        public CalculatorController(ICalculatorHttpService calculatorHttpService)
         {
             _calculatorHttpService = calculatorHttpService;
         }
