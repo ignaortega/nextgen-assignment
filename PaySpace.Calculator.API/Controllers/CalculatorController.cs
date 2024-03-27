@@ -11,11 +11,12 @@ using PaySpace.Calculator.Services.Models;
 namespace PaySpace.Calculator.API.Controllers
 {
     [ApiController]
-    [Route("api/[Controller]")]
+    [Route("api/")]
     public sealed class CalculatorController(
         ILogger<CalculatorController> logger,
         IHistoryService historyService,
         ICalculatorFactory calculatorFactory,
+        IPostalCodeService postalCodeService,
         IMapper mapper)
         : ControllerBase
     {
@@ -28,13 +29,27 @@ namespace PaySpace.Calculator.API.Controllers
 
                 var calculateResult = await calculator.CalculateAsync(request.Income);
 
-                await historyService.AddAsync(new CalculatorHistory
+                if (request.Id.HasValue)
                 {
-                    Tax = calculateResult.Tax,
-                    Calculator = calculateResult.Calculator,
-                    PostalCode = request.PostalCode,
-                    Income = request.Income
-                });
+                    await historyService.UpdateHistoryAsync(new CalculatorHistory
+                    {
+                        Tax = calculateResult.Tax,
+                        Calculator = calculateResult.Calculator,
+                        PostalCode = request.PostalCode,
+                        Income = request.Income,
+                        Id = request.Id.Value
+                    });
+                }
+                else
+                {
+                    await historyService.AddAsync(new CalculatorHistory
+                    {
+                        Tax = calculateResult.Tax,
+                        Calculator = calculateResult.Calculator,
+                        PostalCode = request.PostalCode,
+                        Income = request.Income
+                    });
+                }
 
                 return this.Ok(mapper.Map<CalculateResultDto>(calculateResult));
             }
@@ -61,6 +76,31 @@ namespace PaySpace.Calculator.API.Controllers
             var history = await historyService.GetHistoryAsync();
 
             return this.Ok(mapper.Map<List<CalculatorHistoryDto>>(history));
+        }
+
+        [HttpPost("delete-history")]
+        public async Task<ActionResult> DeleteHistoryAsync(long id)
+        {
+            try
+            {
+                await historyService.DeleteHistoryAsync(id);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, e.Message);
+
+                return this.BadRequest();
+            }
+
+            return this.Ok();
+        }
+
+        [HttpGet("postalcode")]
+        public async Task<ActionResult<List<PostalCode>>> PostalCodes()
+        {
+            var postalCodes = await postalCodeService.GetPostalCodesAsync();
+
+            return this.Ok(mapper.Map<List<PostalCodeDto>>(postalCodes));
         }
     }
 }

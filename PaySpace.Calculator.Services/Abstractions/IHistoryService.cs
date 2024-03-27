@@ -7,5 +7,7 @@ namespace PaySpace.Calculator.Services.Abstractions
         Task<List<CalculatorHistory>> GetHistoryAsync();
 
         Task AddAsync(CalculatorHistory calculatorHistory);
+        Task DeleteHistoryAsync(long id);
+        Task UpdateHistoryAsync(CalculatorHistory calculatorHistory);
     }
 }

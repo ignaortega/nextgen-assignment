@@ -10,5 +10,6 @@ namespace PaySpace.Calculator.Web.Models
         [Required]
         [Range(0.001, double.MaxValue, ErrorMessage = "Income must be greater than 0")]
         public decimal Income { get; set; }
+        public long? Id { get; set; }
     }
 }

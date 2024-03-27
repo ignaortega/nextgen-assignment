@@ -1,6 +1,8 @@
 using Mapster;
 
+using PaySpace.Calculator.API.Models;
 using PaySpace.Calculator.Data;
+using PaySpace.Calculator.Data.Models;
 using PaySpace.Calculator.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 builder.Services.AddMapster();
+
+//// Configure Mapster
+//TypeAdapterConfig<PostalCodeDto, PostalCode>.NewConfig()
+//    .Ignore(dest => dest.Id) // Assuming Id is auto-generated
+//    .Map(dest => dest.Calculator, src => Enum.Parse<CalculatorType>(src.Calculator));
+
+//TypeAdapterConfig<PostalCode, PostalCodeDto>.NewConfig()
+//    .Map(dest => dest.Calculator, src => src.Calculator.ToString());
+
 
 builder.Services.AddCalculatorServices();
 builder.Services.AddDataServices(builder.Configuration);

@@ -1,0 +1,19 @@
+@model CalculatorViewModel
+
+@{
+    ViewData["Title"] = "Calculator";
+}
+
+<h1>Income Calculator</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="PostalCode">Postal Code:</label>
+        <select asp-for="PostalCode" asp-items="Model.PostalCodes"></select>
+    </div>
+    <div class="form-group">
+        <label asp-for="Income">Income:</label>
+        <input asp-for="Income" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Calculate</button>
+</form>

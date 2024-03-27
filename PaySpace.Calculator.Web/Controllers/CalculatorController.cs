@@ -7,13 +7,29 @@ using PaySpace.Calculator.Web.Services.Models;
 
 namespace PaySpace.Calculator.Web.Controllers
 {
-    public class CalculatorController(ICalculatorHttpService calculatorHttpService) : Controller
+    public class CalculatorController : Controller
     {
+        private readonly ICalculatorHttpService _calculatorHttpService;
+
+        public CalculatorController(ICalculatorHttpService calculatorHttpService)
+        {
+            _calculatorHttpService = calculatorHttpService;
+        }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(long? id)
         {
             var vm = await this.GetCalculatorViewModelAsync();
+
+            if (id.HasValue)
+            {
+                var calculatorHistoryList = await _calculatorHttpService.GetHistoryAsync();
+                var history = calculatorHistoryList.Where(h => h.Id == id).FirstOrDefault();
+
+                vm.Income = history.Income;
+                vm.PostalCode= history.PostalCode;
+                vm.Id = history.Id;
+            }
 
             return this.View(vm);
         }
@@ -21,10 +37,23 @@ namespace PaySpace.Calculator.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> History()
         {
-            return this.View(new CalculatorHistoryViewModel
+            var vm = await this.GetCalculatorHistoryViewModelAsync();
+            return this.View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(long id)
+        {
+            try
             {
-                CalculatorHistory = await calculatorHttpService.GetHistoryAsync()
-            });
+                await this.DeleteHistory(id);
+            }
+            catch (Exception e)
+            {
+                this.ModelState.AddModelError(string.Empty, e.Message);
+                return this.BadRequest(e.Message);
+            }
+            return this.Ok();
         }
 
         [HttpPost]
@@ -35,10 +64,11 @@ namespace PaySpace.Calculator.Web.Controllers
             {
                 try
                 {
-                    await calculatorHttpService.CalculateTaxAsync(new CalculateRequest
+                    await _calculatorHttpService.CalculateTaxAsync(new CalculateRequest
                     {
                         PostalCode = request.PostalCode,
-                        Income = request.Income
+                        Income = request.Income,
+                        Id = request.Id
                     });
 
                     return this.RedirectToAction(nameof(this.History));
@@ -56,14 +86,30 @@ namespace PaySpace.Calculator.Web.Controllers
 
         private async Task<CalculatorViewModel> GetCalculatorViewModelAsync(CalculateRequestViewModel? request = null)
         {
-            var postalCodes = await calculatorHttpService.GetPostalCodesAsync();
+            var postalCodes = await _calculatorHttpService.GetPostalCodesAsync();
 
             return new CalculatorViewModel
             {
-                PostalCodes = new SelectList(postalCodes),
-                Income = request.Income,
-                PostalCode = request.PostalCode ?? string.Empty
+                PostalCodes = new SelectList(postalCodes.Select(pc => pc.Code)),
+                Income = request?.Income ?? 0,
+                PostalCode = request?.PostalCode ?? string.Empty,
+                Id = request?.Id
             };
+        }
+
+        private async Task<CalculatorHistoryViewModel> GetCalculatorHistoryViewModelAsync(CalculateRequestViewModel? request = null)
+        {
+            var calculatorHistory = await _calculatorHttpService.GetHistoryAsync();
+
+            return new CalculatorHistoryViewModel
+            {
+                CalculatorHistory = calculatorHistory ?? new List<CalculatorHistory>()
+            };
+        }
+
+        private async Task DeleteHistory(long id)
+        {
+            await _calculatorHttpService.DeleteHistory(id);
         }
     }
 }

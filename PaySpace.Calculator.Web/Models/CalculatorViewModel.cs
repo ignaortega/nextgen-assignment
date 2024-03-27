@@ -9,5 +9,6 @@ namespace PaySpace.Calculator.Web.Models
         public string PostalCode { get; set; }
 
         public decimal Income { get; set; }
+        public long? Id { get; set; }
     }
 }

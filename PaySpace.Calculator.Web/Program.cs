@@ -2,8 +2,14 @@ using PaySpace.Calculator.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+IConfiguration config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
+
+var calculatorApiSettings = config.GetSection("CalculatorSettings");
+builder.Services.Configure< CalculatorApiSettings>(calculatorApiSettings);
+builder.Services.AddCalculatorHttpServices(calculatorApiSettings);
 builder.Services.AddControllersWithViews();
-builder.Services.AddCalculatorHttpServices();
 
 var app = builder.Build();
 
