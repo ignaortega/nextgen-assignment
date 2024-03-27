@@ -1,9 +1,9 @@
-using PaySpace.Calculator.Web.Services.Models;
+using PaySpace.Calculator.Common.Models;
 
 namespace PaySpace.Calculator.Web.Models
 {
     public sealed class CalculatorHistoryViewModel
     {
-        public List<CalculatorHistory>? CalculatorHistory { get; set; }
+        public List<CalculatorHistoryDto>? CalculatorHistory { get; set; }
     }
 }

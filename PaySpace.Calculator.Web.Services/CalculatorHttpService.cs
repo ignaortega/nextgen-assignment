@@ -1,11 +1,10 @@
 ﻿using System.Net.Http.Json;
-using System.Text.Json.Serialization;
 using System.Text;
 
-using PaySpace.Calculator.Web.Services.Abstractions;
-using PaySpace.Calculator.Web.Services.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+
+using PaySpace.Calculator.Common.Models;
+using PaySpace.Calculator.Web.Services.Abstractions;
 
 namespace PaySpace.Calculator.Web.Services
 {
@@ -28,7 +27,7 @@ namespace PaySpace.Calculator.Web.Services
             return await response.Content.ReadFromJsonAsync<List<PostalCodeDto>>() ?? new List<PostalCodeDto>();
         }
 
-        public async Task<List<CalculatorHistory>> GetHistoryAsync()
+        public async Task<List<CalculatorHistoryDto>> GetHistoryAsync()
         {
             var response = await this._httpClient.GetAsync("api/history");
             if (!response.IsSuccessStatusCode)
@@ -36,7 +35,7 @@ namespace PaySpace.Calculator.Web.Services
                 throw new Exception($"Cannot fetch tax history, status code: {response.StatusCode}");
             }
 
-            return await response.Content.ReadFromJsonAsync<List<CalculatorHistory>>() ?? new List<CalculatorHistory>();
+            return await response.Content.ReadFromJsonAsync<List<CalculatorHistoryDto>>() ?? new List<CalculatorHistoryDto>();
         }
 
         public async Task<CalculateResult> CalculateTaxAsync(CalculateRequest calculationRequest)

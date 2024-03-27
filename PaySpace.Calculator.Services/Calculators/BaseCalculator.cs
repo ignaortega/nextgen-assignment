@@ -1,9 +1,7 @@
-﻿using System.Runtime.InteropServices.Marshalling;
-
+﻿using PaySpace.Calculator.Common.Models;
 using PaySpace.Calculator.Data.Models;
 using PaySpace.Calculator.Services.Abstractions;
 using PaySpace.Calculator.Services.Exceptions;
-using PaySpace.Calculator.Services.Models;
 
 namespace PaySpace.Calculator.Services.Calculators
 {

@@ -22,4 +22,8 @@
         </AssemblyAttribute>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\PaySpace.Calculator.Common\PaySpace.Calculator.Common.csproj" />
+    </ItemGroup>
+
 </Project>

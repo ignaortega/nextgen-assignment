@@ -9,11 +9,12 @@
 
     <ItemGroup>
         <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\PaySpace.Calculator.Common\PaySpace.Calculator.Common.csproj" />
       <ProjectReference Include="..\PaySpace.Calculator.Services\PaySpace.Calculator.Services.csproj" />
         <ProjectReference Include="..\PaySpace.Calculator.Data\PaySpace.Calculator.Data.csproj" />
     </ItemGroup>

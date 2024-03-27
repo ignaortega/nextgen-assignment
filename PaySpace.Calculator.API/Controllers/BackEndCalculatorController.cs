@@ -2,18 +2,17 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-using PaySpace.Calculator.API.Models;
+using PaySpace.Calculator.Common.Models;
 using PaySpace.Calculator.Data.Models;
 using PaySpace.Calculator.Services.Abstractions;
 using PaySpace.Calculator.Services.Exceptions;
-using PaySpace.Calculator.Services.Models;
 
 namespace PaySpace.Calculator.API.Controllers
 {
     [ApiController]
     [Route("api/")]
-    public sealed class CalculatorController(
-        ILogger<CalculatorController> logger,
+    public sealed class BackEndCalculatorController(
+        ILogger<BackEndCalculatorController> logger,
         IHistoryService historyService,
         ICalculatorFactory calculatorFactory,
         IPostalCodeService postalCodeService,

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Caching.Memory;
 
+using PaySpace.Calculator.Common.Models;
 using PaySpace.Calculator.Data.Models;
 
 namespace PaySpace.Calculator.Tests

@@ -2,6 +2,7 @@
 
 using NUnit.Framework;
 
+using PaySpace.Calculator.Common.Models;
 using PaySpace.Calculator.Data.Models;
 using PaySpace.Calculator.Services.Abstractions;
 using PaySpace.Calculator.Services.Calculators;

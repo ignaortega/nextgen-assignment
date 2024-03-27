@@ -1,4 +1,4 @@
-﻿namespace PaySpace.Calculator.API.Models
+﻿namespace PaySpace.Calculator.Common.Models
 {
     public sealed class CalculateResultDto
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-using PaySpace.Calculator.Data.Models;
+using PaySpace.Calculator.Common.Models;
 using PaySpace.Calculator.Services.Abstractions;
 using PaySpace.Calculator.Services.Exceptions;
 
@@ -21,7 +21,7 @@ namespace PaySpace.Calculator.Services
         {
             var calculatorType = await _postalCodeService.CalculatorTypeAsync(postalCode);
 
-            if(calculatorType == null)
+            if(!calculatorType.HasValue)
             {
                 throw new CalculatorException($"Not suitable Calculator for postal code {postalCode}");
             }

@@ -1,4 +1,4 @@
-﻿namespace PaySpace.Calculator.Data.Models
+﻿namespace PaySpace.Calculator.Common.Models
 {
     public enum CalculatorType
     {

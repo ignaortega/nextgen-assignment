@@ -1,17 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
+using PaySpace.Calculator.Common.Models;
 using PaySpace.Calculator.Web.Models;
 using PaySpace.Calculator.Web.Services.Abstractions;
-using PaySpace.Calculator.Web.Services.Models;
 
 namespace PaySpace.Calculator.Web.Controllers
 {
-    public class CalculatorController : Controller
+    public class FrontEndCalculatorController : Controller
     {
         private readonly ICalculatorHttpService _calculatorHttpService;
 
-        public CalculatorController(ICalculatorHttpService calculatorHttpService)
+        public FrontEndCalculatorController(ICalculatorHttpService calculatorHttpService)
         {
             _calculatorHttpService = calculatorHttpService;
         }
@@ -42,11 +42,11 @@ namespace PaySpace.Calculator.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(long id)
+        public async Task<IActionResult> DeleteHistory(long id)
         {
             try
             {
-                await this.DeleteHistory(id);
+                await _calculatorHttpService.DeleteHistory(id);                
             }
             catch (Exception e)
             {
@@ -103,13 +103,8 @@ namespace PaySpace.Calculator.Web.Controllers
 
             return new CalculatorHistoryViewModel
             {
-                CalculatorHistory = calculatorHistory ?? new List<CalculatorHistory>()
+                CalculatorHistory = calculatorHistory ?? new List<CalculatorHistoryDto>()
             };
-        }
-
-        private async Task DeleteHistory(long id)
-        {
-            await _calculatorHttpService.DeleteHistory(id);
         }
     }
 }

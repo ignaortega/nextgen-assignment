@@ -1,4 +1,5 @@
-﻿using PaySpace.Calculator.Data.Models;
+﻿using PaySpace.Calculator.Common.Models;
+using PaySpace.Calculator.Data.Models;
 
 namespace PaySpace.Calculator.Services.Abstractions
 {

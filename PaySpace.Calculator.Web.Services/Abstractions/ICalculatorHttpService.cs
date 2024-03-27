@@ -1,4 +1,4 @@
-﻿using PaySpace.Calculator.Web.Services.Models;
+﻿using PaySpace.Calculator.Common.Models;
 
 namespace PaySpace.Calculator.Web.Services.Abstractions
 {
@@ -6,7 +6,7 @@ namespace PaySpace.Calculator.Web.Services.Abstractions
     {
         Task<List<PostalCodeDto>> GetPostalCodesAsync();
 
-        Task<List<CalculatorHistory>> GetHistoryAsync();
+        Task<List<CalculatorHistoryDto>> GetHistoryAsync();
 
         Task<CalculateResult> CalculateTaxAsync(CalculateRequest calculationRequest);
         Task DeleteHistory(long id);
